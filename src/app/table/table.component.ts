@@ -11,8 +11,10 @@ import {
 import { TableCheckboxColumnDirective } from './directives/table-checkbox-column.directive';
 import { TableColumnDirective } from './directives/table-column.directive';
 import { TableElementDirective } from './directives/table-element.directive';
+import { TableExpandableContentDirective } from './directives/table-expandable-content.directive';
+import { TableExpandableRowDirective } from './directives/table-expandable-row.directive';
 
-type TableElementKey<T> = T[keyof T] | number | string;
+type TableElementKey<T> = T[keyof T] | number;
 
 @Component({
   selector: 'app-table',
@@ -38,15 +40,24 @@ export class TableComponent<T extends Object> {
   @ContentChildren(TableElementDirective, {
     descendants: true,
   })
-  contents!: QueryList<TableElementDirective>;
+  public contents!: QueryList<TableElementDirective>;
 
-  @ContentChildren(TableColumnDirective)
-  columns!: QueryList<TableColumnDirective>;
+  @ContentChildren(TableColumnDirective, {
+    descendants: true,
+  })
+  public columns!: QueryList<TableColumnDirective>;
 
   @ContentChild(TableCheckboxColumnDirective)
-  checkbox?: TableCheckboxColumnDirective;
+  public checkbox?: TableCheckboxColumnDirective;
+
+  @ContentChild(TableExpandableRowDirective)
+  public expandable?: TableExpandableRowDirective;
+
+  @ContentChild(TableExpandableContentDirective, { descendants: true })
+  public expandableContent?: TableExpandableContentDirective;
 
   public selecteds: Map<TableElementKey<T>, boolean> = new Map();
+  public expandedRow?: number;
 
   public selected(element: T, index: number): boolean {
     const founded = this.selecteds.get(this.key(element, index));
@@ -72,6 +83,15 @@ export class TableComponent<T extends Object> {
 
     const selecteds = checked ? [...this.selecteds.keys()] : [];
     this.selectedKeysChange.emit(selecteds);
+  }
+
+  public onExpandRow(row: number): void {
+    if (this.expandedRow == row) {
+      this.expandedRow = undefined;
+      return;
+    }
+
+    this.expandedRow = row;
   }
 
   private key(element: T, index: number): TableElementKey<T> {

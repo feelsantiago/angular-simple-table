@@ -1,15 +1,25 @@
 <h1 class="is-size-1">TABLE EXAMPLE</h1>
 
 <app-table selectBy="name" [data]="data" [(selectedKeys)]="selecteds">
-  <app-table-checkbox-column [showSelectAll]="true"></app-table-checkbox-column>
-  <app-table-column title="Name">
-    <ng-template appTableElement let-option>
-      <p>{{ option.name }}</p>
+  <app-table-expandable-row>
+    <app-table-checkbox-column
+      [showSelectAll]="true"
+    ></app-table-checkbox-column>
+    <app-table-column title="Name">
+      <ng-template appTableElement let-option>
+        <p>{{ option.name }}</p>
+      </ng-template>
+    </app-table-column>
+    <app-table-column title="Value">
+      <ng-template appTableElement let-option>
+        <p>{{ option.value }}</p>
+      </ng-template>
+    </app-table-column>
+
+    <ng-template appTableExpandableContent let-option>
+      <div>
+        <h1>{{ option.name }}</h1>
+      </div>
     </ng-template>
-  </app-table-column>
-  <app-table-column title="Value">
-    <ng-template appTableElement let-option>
-      <p>{{ option.value }}</p>
-    </ng-template>
-  </app-table-column>
+  </app-table-expandable-row>
 </app-table>

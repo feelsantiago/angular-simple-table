@@ -1,35 +1,50 @@
 <table class="table">
-  <tr>
-    <th *ngIf="checkbox">
-      <label *ngIf="checkbox.showSelectAll" class="checkbox">
-        <input type="checkbox" (change)="onSelectAll($event)" />
-      </label>
-    </th>
-    <th *ngFor="let column of columns">
-      <p>{{ column.title }}</p>
-    </th>
-  </tr>
-  <tr
-    *ngFor="let element of data; index as i"
-    [ngClass]="{
-      'is-selected': selected(element, i)
-    }"
-  >
-    <td *ngIf="checkbox">
-      <label class="checkbox">
-        <input
-          type="checkbox"
-          [checked]="selected(element, i)"
-          (change)="onElementSelected(element, i)"
-        />
-      </label>
-    </td>
-    <td *ngFor="let content of contents">
-      <ng-container
-        [ngTemplateOutlet]="content.templateRef"
-        [ngTemplateOutletContext]="{ $implicit: element, index: i }"
+  <thead>
+    <tr>
+      <th *ngIf="expandable"></th>
+      <th *ngIf="checkbox">
+        <label *ngIf="checkbox.showSelectAll" class="checkbox">
+          <input type="checkbox" (change)="onSelectAll($event)" />
+        </label>
+      </th>
+      <th *ngFor="let column of columns">
+        <p>{{ column.title }}</p>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let element of data; index as i">
+      <tr
+        [ngClass]="{
+          'is-selected': selected(element, i)
+        }"
       >
-      </ng-container>
-    </td>
-  </tr>
+        <th *ngIf="expandable" (click)="onExpandRow(i)">></th>
+        <td *ngIf="checkbox">
+          <label class="checkbox">
+            <input
+              type="checkbox"
+              [checked]="selected(element, i)"
+              (change)="onElementSelected(element, i)"
+            />
+          </label>
+        </td>
+        <td *ngFor="let content of contents">
+          <ng-container
+            [ngTemplateOutlet]="content.templateRef"
+            [ngTemplateOutletContext]="{ $implicit: element, index: i }"
+          >
+          </ng-container>
+        </td>
+      </tr>
+      <app-table-expandable-render [expanded]="expandedRow == i">
+        <ng-container
+          *ngIf="expandable && expandableContent"
+          [ngTemplateOutlet]="expandableContent.templateRef"
+          [ngTemplateOutletContext]="{ $implicit: element, index: i }"
+        >
+        </ng-container>
+      </app-table-expandable-render>
+    </ng-container>
+  </tbody>
 </table>
