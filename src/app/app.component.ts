@@ -50,4 +50,15 @@ export class AppComponent {
       value: 10,
     },
   ];
+
+  private _selecteds: any = ['Supplier 7'];
+
+  set selecteds(value: any) {
+    console.log(value);
+    this._selecteds = value;
+  }
+
+  get selecteds() {
+    return this._selecteds;
+  }
 }
