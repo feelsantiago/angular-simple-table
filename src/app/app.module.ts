@@ -8,7 +8,6 @@ import { TableElementDirective } from './table/directives/table-element.directiv
 import { TableExpandableContentDirective } from './table/directives/table-expandable-content.directive';
 import { TableExpandableIconDirective } from './table/directives/table-expandable-icon.directive';
 import { TableExpandableRowDirective } from './table/directives/table-expandable-row.directive';
-import { TableExpandableRenderComponent } from './table/table-expandable-render/table-expandable-render.component';
 import { TableComponent } from './table/table.component';
 import { TestComponent } from './test/test.component';
 
@@ -16,7 +15,6 @@ import { TestComponent } from './test/test.component';
   declarations: [
     AppComponent,
     TableComponent,
-    TableExpandableRenderComponent,
     TableExpandableRowDirective,
     TableColumnDirective,
     TableCheckboxColumnDirective,

@@ -1,4 +1,10 @@
 <app-table [data]="data">
+  <app-table-column title="">
+    <ng-template appTableElement></ng-template>
+  </app-table-column>
+  <app-table-column title="">
+    <ng-template appTableElement></ng-template>
+  </app-table-column>
   <app-table-column title="Name">
     <ng-template appTableElement let-option>
       <p>{{ option.name }}</p>

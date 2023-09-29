@@ -16,8 +16,15 @@
       </ng-template>
     </app-table-column>
 
-    <ng-template appTableExpandableIcon let-option>
-      <span *ngIf="option.suppliers && option.suppliers.length > 0"> > </span>
+    <ng-template appTableExpandableIcon let-option let-expanded="expanded">
+      <span
+        *ngIf="option.suppliers && option.suppliers.length > 0 && !expanded"
+      >
+        >
+      </span>
+      <span *ngIf="option.suppliers && option.suppliers.length > 0 && expanded">
+        <
+      </span>
     </ng-template>
 
     <ng-template appTableExpandableContent let-option>
