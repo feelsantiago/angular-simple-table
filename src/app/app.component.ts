@@ -51,10 +51,9 @@ export class AppComponent {
     },
   ];
 
-  private _selecteds: any = ['Supplier 7'];
+  private _selecteds: any[] = ['Supplier 7'];
 
-  set selecteds(value: any) {
-    console.log(value);
+  set selecteds(value: any[]) {
     this._selecteds = value;
   }
 

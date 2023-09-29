@@ -12,7 +12,7 @@ import { TableCheckboxColumnDirective } from './directives/table-checkbox-column
 import { TableColumnDirective } from './directives/table-column.directive';
 import { TableElementDirective } from './directives/table-element.directive';
 
-type TableElementKey<T> = T[keyof T] | number;
+type TableElementKey<T> = T[keyof T] | number | string;
 
 @Component({
   selector: 'app-table',
