@@ -1,10 +1,29 @@
-<table>
+<table class="table">
   <tr>
+    <th *ngIf="checkbox">
+      <label *ngIf="checkbox.showSelectAll" class="checkbox">
+        <input type="checkbox" (change)="onSelectAll($event)" />
+      </label>
+    </th>
     <th *ngFor="let column of columns">
-      <ng-container [ngTemplateOutlet]="column.template"></ng-container>
+      <p>{{ column.title }}</p>
     </th>
   </tr>
-  <tr *ngFor="let element of data; index as i">
+  <tr
+    *ngFor="let element of data; index as i"
+    [ngClass]="{
+      'is-selected': selected(element, i)
+    }"
+  >
+    <td *ngIf="checkbox">
+      <label class="checkbox">
+        <input
+          type="checkbox"
+          [checked]="selected(element, i)"
+          (change)="onElementSelected(element, i)"
+        />
+      </label>
+    </td>
     <td *ngFor="let content of contents">
       <ng-container
         [ngTemplateOutlet]="content.templateRef"

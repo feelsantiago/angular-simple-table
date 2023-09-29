@@ -1,6 +1,7 @@
-<h1>TABLE EXAMPLE</h1>
+<h1 class="is-size-1">TABLE EXAMPLE</h1>
 
 <app-table [data]="data">
+  <app-table-checkbox-column [showSelectAll]="true"></app-table-checkbox-column>
   <app-table-column title="Name">
     <ng-template appTableElement let-option>
       <p>{{ option.name }}</p>
