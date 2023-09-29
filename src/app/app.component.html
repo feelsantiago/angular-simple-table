@@ -12,14 +12,16 @@
     </app-table-column>
     <app-table-column title="Value">
       <ng-template appTableElement let-option>
-        <p>{{ option.value }}</p>
+        <p>{{ value(option) }}</p>
       </ng-template>
     </app-table-column>
 
+    <ng-template appTableExpandableIcon let-option>
+      <span *ngIf="option.suppliers && option.suppliers.length > 0"> > </span>
+    </ng-template>
+
     <ng-template appTableExpandableContent let-option>
-      <div>
-        <h1>{{ option.name }}</h1>
-      </div>
+      <app-test [data]="option.suppliers"></app-test>
     </ng-template>
   </app-table-expandable-row>
 </app-table>

@@ -19,7 +19,15 @@
           'is-selected': selected(element, i)
         }"
       >
-        <th *ngIf="expandable" (click)="onExpandRow(i)">></th>
+        <th *ngIf="expandable" (click)="onExpandRow(i)">
+          <ng-template #defaultIcon> > </ng-template>
+          <ng-container
+            *ngIf="expandable"
+            [ngTemplateOutlet]="expandableIcon?.templateRef || defaultIcon"
+            [ngTemplateOutletContext]="{ $implicit: element, index: i }"
+          >
+          </ng-container>
+        </th>
         <td *ngIf="checkbox">
           <label class="checkbox">
             <input

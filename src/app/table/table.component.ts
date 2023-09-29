@@ -12,9 +12,10 @@ import { TableCheckboxColumnDirective } from './directives/table-checkbox-column
 import { TableColumnDirective } from './directives/table-column.directive';
 import { TableElementDirective } from './directives/table-element.directive';
 import { TableExpandableContentDirective } from './directives/table-expandable-content.directive';
+import { TableExpandableIconDirective } from './directives/table-expandable-icon.directive';
 import { TableExpandableRowDirective } from './directives/table-expandable-row.directive';
 
-type TableElementKey<T> = T[keyof T] | number;
+export type TableElementKey<T> = T[keyof T] | number;
 
 @Component({
   selector: 'app-table',
@@ -55,6 +56,9 @@ export class TableComponent<T extends Object> {
 
   @ContentChild(TableExpandableContentDirective, { descendants: true })
   public expandableContent?: TableExpandableContentDirective;
+
+  @ContentChild(TableExpandableIconDirective, { descendants: true })
+  public expandableIcon?: TableExpandableIconDirective;
 
   public selecteds: Map<TableElementKey<T>, boolean> = new Map();
   public expandedRow?: number;
