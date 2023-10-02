@@ -1,6 +1,6 @@
 <h1 class="is-size-1">TABLE EXAMPLE</h1>
 
-<app-table [selectBy]="key" [data]="data">
+<app-table [selectBy]="key" [data]="data" [(selectedKeys)]="selecteds">
   <app-table-expandable-row>
     <app-table-checkbox-column
       [showSelectAll]="true"

@@ -43,7 +43,9 @@ export class TableComponent<T extends Object> {
   }
 
   @Input()
-  public set selectedKeys(keys: TableElementKey<T>[]) {}
+  public set selectedKeys(keys: TableElementKey<T>[]) {
+    this.selectedsInput$.next(keys);
+  }
 
   @Output()
   public selectedKeysChange = new EventEmitter<TableElementKey<T>[]>();
@@ -67,15 +69,26 @@ export class TableComponent<T extends Object> {
   public expanded$!: Observable<ExpandableState>;
 
   private readonly dataInput$ = new BehaviorSubject<T[]>([]);
-  private readonly selectByInput$ = new BehaviorSubject<TableElementKey<T>>(0);
+  private readonly selectByInput$ = new BehaviorSubject<keyof T | undefined>(
+    undefined
+  );
+  private readonly selectedsInput$ = new BehaviorSubject<TableElementKey<T>[]>(
+    []
+  );
   private readonly expandedCommand$ = new BehaviorSubject<ExpandableRow>(
     'none'
   );
 
   constructor() {
-    this.elements$ = combineLatest([this.dataInput$, this.selectByInput$]).pipe(
+    this.elements$ = combineLatest([
+      this.dataInput$,
+      this.selectByInput$,
+      this.selectedsInput$,
+    ]).pipe(
       filter(([data]) => !!data.length),
-      map(([data, key]) => new DataTransform(data).elements(key))
+      map(([data, key, selecteds]) =>
+        new DataTransform(data, selecteds).elements(key)
+      )
     );
 
     this.expanded$ = this.expandedCommand$.pipe(
@@ -88,22 +101,8 @@ export class TableComponent<T extends Object> {
     this.expandedCommand$.next(row);
   }
 
-  public selected(element: TableElement<T>, index: number): boolean {
-    // const founded = this.selecteds.get(this.key(element, index));
-    // return founded ?? false;
-
-    return false;
-  }
-
   public onElementSelected(element: TableElement<T>, index: number): void {
-    // if (this.selected(element, index)) {
-    //   this.selecteds.delete(this.key(element, index));
-    //   this.selectedKeysChange.emit([...this.selecteds.keys()]);
-    //   return;
-    // }
-    //
-    // this.selecteds.set(this.key(element, index), true);
-    // this.selectedKeysChange.emit([...this.selecteds.keys()]);
+    // this.selectedsInput$.next([element]);
   }
 
   public onSelectAll(event: Event): void {
@@ -115,20 +114,4 @@ export class TableComponent<T extends Object> {
     // const selecteds = checked ? [...this.selecteds.keys()] : [];
     // this.selectedKeysChange.emit(selecteds);
   }
-
-  // private key(element: T, index: number): TableElementKey<T> {
-  //   return this.selectBy ? element[this.selectBy] : index;
-  // }
-
-  // private selectAll(elements: T[], selection: boolean): void {
-  //   for (let [index, element] of elements.entries()) {
-  //     this.selecteds.set(this.key(element, index), selection);
-  //   }
-  // }
-  //
-  // private selectAllByKey(keys: TableElementKey<T>[], selection: boolean): void {
-  //   for (let key of keys) {
-  //     this.selecteds.set(key, selection);
-  //   }
-  // }
 }

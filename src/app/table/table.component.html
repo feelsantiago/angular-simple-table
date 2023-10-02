@@ -16,7 +16,7 @@
     <ng-container *ngFor="let element of elements$ | async; index as i">
       <tr
         [ngClass]="{
-          'is-selected': selected(element, i)
+          'is-selected': element.selected,
         }"
       >
         <ng-container *ngIf="expanded$ | async as expanded">
@@ -38,7 +38,7 @@
           <label class="checkbox">
             <input
               type="checkbox"
-              [checked]="selected(element, i)"
+              [checked]="element.selected"
               (change)="onElementSelected(element, i)"
             />
           </label>

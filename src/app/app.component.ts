@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
 } from '@angular/core';
+import { TableElementKey } from './table/domain/types';
 
 type SingleSupplier = {
   name: string;
@@ -38,7 +39,7 @@ export class AppComponent {
       value: 10,
     },
     {
-      name: 'Grup 1',
+      name: 'Group 1',
       group: true,
       suppliers: [
         {
@@ -72,16 +73,15 @@ export class AppComponent {
   ];
 
   public key: keyof Supplier = 'name';
+  private _selecteds: TableElementKey<Supplier>[] = ['Supplier 7', 'Group 1'];
 
-  // private _selecteds: TableElementKey<Supplier>[] = ['Supplier 7'];
-  //
-  // set selecteds(value: TableElementKey<Supplier>[]) {
-  //   this._selecteds = value;
-  // }
-  //
-  // get selecteds() {
-  //   return this._selecteds;
-  // }
+  set selecteds(value: TableElementKey<Supplier>[]) {
+    this._selecteds = value;
+  }
+
+  get selecteds() {
+    return this._selecteds;
+  }
 
   constructor(private ref: ChangeDetectorRef) {}
 
