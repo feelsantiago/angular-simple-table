@@ -56,7 +56,7 @@
       </tr>
       <ng-container *ngIf="expanded$ | async as row">
         <tr *ngIf="row.expanded(i)">
-          <td [attr.colspan]="columns.length + 2">
+          <td class="expandable-content" [attr.colspan]="columns.length + 2">
             <ng-container
               [ngTemplateOutlet]="expandable!.template"
               [ngTemplateOutletContext]="{
