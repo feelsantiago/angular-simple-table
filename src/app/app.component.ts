@@ -83,13 +83,7 @@ export class AppComponent {
   //   return this._selecteds;
   // }
 
-  constructor(private ref: ChangeDetectorRef) {
-    setTimeout(() => {
-      this.key = 'group';
-      console.log('RODOU');
-      ref.markForCheck();
-    }, 2000);
-  }
+  constructor(private ref: ChangeDetectorRef) {}
 
   public value(supplier: Supplier): number {
     if (supplier.group) {

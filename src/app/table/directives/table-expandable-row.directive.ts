@@ -13,9 +13,6 @@ import { TableExpandableIconDirective } from './table-expandable-icon.directive'
   selector: 'app-table-expandable-row',
 })
 export class TableExpandableRowDirective {
-  @Input()
-  public expanded: boolean = false;
-
   @ContentChildren(TableColumnDirective)
   public columns!: QueryList<TableColumnDirective>;
 

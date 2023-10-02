@@ -3,8 +3,8 @@ export type ExpandableRow = number | 'all' | 'none';
 export class ExpandableState {
   constructor(public readonly enabled: boolean, public row: ExpandableRow) {}
 
-  static init(enable: boolean, all: boolean): ExpandableState {
-    return new ExpandableState(enable, all ? 'all' : 'none');
+  static init(): ExpandableState {
+    return new ExpandableState(true, 'none');
   }
 
   expanded(row: ExpandableRow): boolean {

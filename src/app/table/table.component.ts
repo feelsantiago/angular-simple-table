@@ -31,7 +31,7 @@ import { TableElement, TableElementKey } from './domain/types';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent<T extends Object> implements AfterViewInit {
+export class TableComponent<T extends Object> {
   @Input()
   public set data(elements: T[]) {
     this.dataInput$.next(elements);
@@ -62,7 +62,6 @@ export class TableComponent<T extends Object> implements AfterViewInit {
   }
 
   // public selecteds: Map<TableElementKey<T>, boolean> = new Map();
-  public expandedRow?: number;
 
   public elements$!: Observable<TableElement<T>[]>;
   public expanded$!: Observable<ExpandableState>;
@@ -81,19 +80,8 @@ export class TableComponent<T extends Object> implements AfterViewInit {
 
     this.expanded$ = this.expandedCommand$.pipe(
       filter(() => !!this.expandable),
-      scan(
-        (state, row) => state.expand(row),
-        ExpandableState.init(true, this.expandable?.expanded ?? false)
-      )
+      scan((state, row) => state.expand(row), ExpandableState.init())
     );
-
-    this.expanded$.subscribe(console.log);
-  }
-
-  public ngAfterViewInit(): void {
-    if (this.expandable && this.expandable.expanded) {
-      this.expandedCommand$.next('all');
-    }
   }
 
   public onExpandRow(row: number): void {
