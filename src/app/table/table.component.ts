@@ -20,6 +20,9 @@ import {
   merge,
   tap,
   skip,
+  withLatestFrom,
+  distinct,
+  distinctUntilChanged,
 } from 'rxjs';
 import { TableCheckboxColumnDirective } from './directives/table-checkbox-column.directive';
 import { TableColumnDirective } from './directives/table-column.directive';
@@ -77,18 +80,18 @@ export class TableComponent<T extends Object> {
   private readonly selectByInput$ = new BehaviorSubject<keyof T | undefined>(
     undefined
   );
-  private readonly selectedsInput$ = new BehaviorSubject<SelectionState<T>>([]);
+  private readonly selectedsInput$ = new BehaviorSubject<TableElementKey<T>[]>(
+    []
+  );
   private readonly expandedCommand$ = new BehaviorSubject<ExpandableRow>(
     'none'
   );
+  private readonly selectedCommand = new BehaviorSubject<SelectionState<T>>([]);
 
   constructor() {
-    const selecteds$ = this.selectedsInput$.pipe(
-      scan(
-        (current, selecteds) =>
-          TableSelectionState.merge(current.selecteds(), selecteds),
-        new TableSelectionState<T>([])
-      )
+    const selecteds$ = this.selectedCommand.pipe(
+      withLatestFrom(this.selectedsInput$),
+      map(([selecteds, inputs]) => TableSelectionState.merge(inputs, selecteds))
     );
 
     this.elements$ = combineLatest([
@@ -99,6 +102,11 @@ export class TableComponent<T extends Object> {
       filter(([data]) => !!data.length),
       map(([data, key, selecteds]) =>
         new DataTransform(data, selecteds).elements(key)
+      ),
+      tap((elements) =>
+        this.selectedKeysChange.emit(
+          elements.filter((x) => x.selected).map((x) => x.key)
+        )
       )
     );
 
@@ -108,27 +116,16 @@ export class TableComponent<T extends Object> {
     );
   }
 
-  ngOnInit() {
-    this.elements$
-      .pipe(
-        skip(1),
-        map((values) =>
-          values.filter((value) => value.selected).map((value) => value.key)
-        )
-      )
-      .subscribe((value) => this.selectedKeysChange.emit(value));
-  }
-
   public onExpandRow(row: number): void {
     this.expandedCommand$.next(row);
   }
 
   public onElementSelected(element: TableElement<T>): void {
-    this.selectedsInput$.next([element.key]);
+    this.selectedCommand.next([element.key]);
   }
 
   public onSelectAll(event: Event): void {
     const checked = (<HTMLInputElement>event.target).checked;
-    this.selectedsInput$.next(checked ? 'all' : 'none');
+    this.selectedCommand.next(checked ? 'all' : 'none');
   }
 }
