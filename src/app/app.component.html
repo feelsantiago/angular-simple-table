@@ -24,7 +24,7 @@
     </ng-template>
 
     <ng-template appTableExpandableContent let-option>
-      <app-test [data]="option.suppliers"></app-test>
+      <app-test *ngIf="option.suppliers" [data]="option.suppliers"></app-test>
     </ng-template>
   </app-table-expandable-row>
 </app-table>

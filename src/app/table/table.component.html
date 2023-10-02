@@ -20,7 +20,7 @@
         }"
       >
         <ng-container *ngIf="expanded$ | async as expanded">
-          <th *ngIf="expanded.enabled" (click)="onExpandRow(i)">
+          <th (click)="onExpandRow(i)">
             <ng-template #defaultIcon> > </ng-template>
             <ng-container
               *ngIf="expandable"
