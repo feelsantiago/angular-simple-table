@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TableElementKey } from './table/table.component';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core';
 
 type SingleSupplier = {
   name: string;
@@ -68,14 +71,24 @@ export class AppComponent {
     },
   ];
 
-  private _selecteds: TableElementKey<Supplier>[] = ['Supplier 7'];
+  public key: keyof Supplier = 'name';
 
-  set selecteds(value: TableElementKey<Supplier>[]) {
-    this._selecteds = value;
-  }
+  // private _selecteds: TableElementKey<Supplier>[] = ['Supplier 7'];
+  //
+  // set selecteds(value: TableElementKey<Supplier>[]) {
+  //   this._selecteds = value;
+  // }
+  //
+  // get selecteds() {
+  //   return this._selecteds;
+  // }
 
-  get selecteds() {
-    return this._selecteds;
+  constructor(private ref: ChangeDetectorRef) {
+    setTimeout(() => {
+      this.key = 'group';
+      console.log('RODOU');
+      ref.markForCheck();
+    }, 2000);
   }
 
   public value(supplier: Supplier): number {

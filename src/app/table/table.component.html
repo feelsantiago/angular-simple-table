@@ -13,25 +13,27 @@
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngFor="let element of data; index as i">
+    <ng-container *ngFor="let element of elements$ | async; index as i">
       <tr
         [ngClass]="{
           'is-selected': selected(element, i)
         }"
       >
-        <th *ngIf="expandable" (click)="onExpandRow(i)">
-          <ng-template #defaultIcon> > </ng-template>
-          <ng-container
-            *ngIf="expandable"
-            [ngTemplateOutlet]="expandable.icon?.templateRef || defaultIcon"
-            [ngTemplateOutletContext]="{
-              $implicit: element,
-              index: i,
-              expanded: expandedRow === i
-            }"
-          >
-          </ng-container>
-        </th>
+        <ng-container *ngIf="expanded$ | async as expanded">
+          <th *ngIf="expanded.enabled" (click)="onExpandRow(i)">
+            <ng-template #defaultIcon> > </ng-template>
+            <ng-container
+              *ngIf="expandable"
+              [ngTemplateOutlet]="expandable.icon?.templateRef || defaultIcon"
+              [ngTemplateOutletContext]="{
+                $implicit: element.data,
+                index: i,
+                expanded: expanded.expanded(i)
+              }"
+            >
+            </ng-container>
+          </th>
+        </ng-container>
         <td *ngIf="checkbox">
           <label class="checkbox">
             <input
@@ -45,25 +47,27 @@
           <ng-container
             [ngTemplateOutlet]="column.template"
             [ngTemplateOutletContext]="{
-              $implicit: element,
+              $implicit: element.data,
               index: i,
             }"
           >
           </ng-container>
         </td>
       </tr>
-      <tr *ngIf="expandable && expandedRow === i">
-        <td [attr.colspan]="columns.length + 2">
-          <ng-container
-            [ngTemplateOutlet]="expandable.template"
-            [ngTemplateOutletContext]="{
-                $implicit: element,
+      <ng-container *ngIf="expanded$ | async as row">
+        <tr *ngIf="row.expanded(i)">
+          <td [attr.colspan]="columns.length + 2">
+            <ng-container
+              [ngTemplateOutlet]="expandable!.template"
+              [ngTemplateOutletContext]="{
+                $implicit: element.data,
                 index: i,
               }"
-          >
-          </ng-container>
-        </td>
-      </tr>
+            >
+            </ng-container>
+          </td>
+        </tr>
+      </ng-container>
     </ng-container>
   </tbody>
 </table>
