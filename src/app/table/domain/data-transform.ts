@@ -1,9 +1,10 @@
-import { TableElement, TableElementKey } from './types';
+import { TableSelectionState } from './table-selection-state';
+import { TableElement } from './types';
 
 export class DataTransform<T extends Object> {
   constructor(
     private readonly data: T[],
-    private readonly selecteds: TableElementKey<T>[] = []
+    private readonly selecteds: TableSelectionState<T>
   ) {}
 
   public elements(select?: keyof T): TableElement<T>[] {
@@ -12,7 +13,7 @@ export class DataTransform<T extends Object> {
       return {
         key: key,
         data: element,
-        selected: this.selecteds.includes(select ? key : index),
+        selected: this.selecteds.selected(select ? key : index),
       };
     });
   }

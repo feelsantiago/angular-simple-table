@@ -76,6 +76,7 @@ export class AppComponent {
   private _selecteds: TableElementKey<Supplier>[] = ['Supplier 7', 'Group 1'];
 
   set selecteds(value: TableElementKey<Supplier>[]) {
+    console.log(value);
     this._selecteds = value;
   }
 

@@ -17,12 +17,19 @@ import {
   Observable,
   Subject,
   scan,
+  merge,
+  tap,
+  skip,
 } from 'rxjs';
 import { TableCheckboxColumnDirective } from './directives/table-checkbox-column.directive';
 import { TableColumnDirective } from './directives/table-column.directive';
 import { TableExpandableRowDirective } from './directives/table-expandable-row.directive';
 import { DataTransform } from './domain/data-transform';
 import { ExpandableRow, ExpandableState } from './domain/expandable-state';
+import {
+  SelectionState,
+  TableSelectionState,
+} from './domain/table-selection-state';
 import { TableElement, TableElementKey } from './domain/types';
 
 @Component({
@@ -63,8 +70,6 @@ export class TableComponent<T extends Object> {
     return this.expandable?.columns ?? this._columns;
   }
 
-  // public selecteds: Map<TableElementKey<T>, boolean> = new Map();
-
   public elements$!: Observable<TableElement<T>[]>;
   public expanded$!: Observable<ExpandableState>;
 
@@ -72,18 +77,24 @@ export class TableComponent<T extends Object> {
   private readonly selectByInput$ = new BehaviorSubject<keyof T | undefined>(
     undefined
   );
-  private readonly selectedsInput$ = new BehaviorSubject<TableElementKey<T>[]>(
-    []
-  );
+  private readonly selectedsInput$ = new BehaviorSubject<SelectionState<T>>([]);
   private readonly expandedCommand$ = new BehaviorSubject<ExpandableRow>(
     'none'
   );
 
   constructor() {
+    const selecteds$ = this.selectedsInput$.pipe(
+      scan(
+        (current, selecteds) =>
+          TableSelectionState.merge(current.selecteds(), selecteds),
+        new TableSelectionState<T>([])
+      )
+    );
+
     this.elements$ = combineLatest([
       this.dataInput$,
       this.selectByInput$,
-      this.selectedsInput$,
+      selecteds$,
     ]).pipe(
       filter(([data]) => !!data.length),
       map(([data, key, selecteds]) =>
@@ -97,21 +108,27 @@ export class TableComponent<T extends Object> {
     );
   }
 
+  ngOnInit() {
+    this.elements$
+      .pipe(
+        skip(1),
+        map((values) =>
+          values.filter((value) => value.selected).map((value) => value.key)
+        )
+      )
+      .subscribe((value) => this.selectedKeysChange.emit(value));
+  }
+
   public onExpandRow(row: number): void {
     this.expandedCommand$.next(row);
   }
 
-  public onElementSelected(element: TableElement<T>, index: number): void {
-    // this.selectedsInput$.next([element]);
+  public onElementSelected(element: TableElement<T>): void {
+    this.selectedsInput$.next([element.key]);
   }
 
   public onSelectAll(event: Event): void {
-    // const checked = (<HTMLInputElement>event.target).checked;
-    //
-    // this.selecteds.clear();
-    // this.selectAll(this.data, checked);
-    //
-    // const selecteds = checked ? [...this.selecteds.keys()] : [];
-    // this.selectedKeysChange.emit(selecteds);
+    const checked = (<HTMLInputElement>event.target).checked;
+    this.selectedsInput$.next(checked ? 'all' : 'none');
   }
 }
