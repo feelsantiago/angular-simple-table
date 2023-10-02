@@ -15,14 +15,11 @@ import {
   map,
   filter,
   Observable,
-  Subject,
   scan,
-  merge,
   tap,
-  skip,
   withLatestFrom,
-  distinct,
-  distinctUntilChanged,
+  publishReplay,
+  shareReplay,
 } from 'rxjs';
 import { TableCheckboxColumnDirective } from './directives/table-checkbox-column.directive';
 import { TableColumnDirective } from './directives/table-column.directive';
@@ -103,16 +100,13 @@ export class TableComponent<T extends Object> {
       map(([data, key, selecteds]) =>
         new DataTransform(data, selecteds).elements(key)
       ),
-      tap((elements) =>
-        this.selectedKeysChange.emit(
-          elements.filter((x) => x.selected).map((x) => x.key)
-        )
-      )
+      tap((elements) => this.selectionChange(elements))
     );
 
     this.expanded$ = this.expandedCommand$.pipe(
-      filter(() => !!this.expandable),
-      scan((state, row) => state.expand(row), ExpandableState.init())
+      scan((state, row) => state.expand(row), ExpandableState.init()),
+      shareReplay(1),
+      filter(() => !!this.expandable)
     );
   }
 
@@ -127,5 +121,12 @@ export class TableComponent<T extends Object> {
   public onSelectAll(event: Event): void {
     const checked = (<HTMLInputElement>event.target).checked;
     this.selectedCommand.next(checked ? 'all' : 'none');
+  }
+
+  private selectionChange(elements: TableElement<T>[]): void {
+    const selecteds = elements
+      .filter((element) => element.selected)
+      .map((element) => element.key);
+    this.selectedKeysChange.emit(selecteds);
   }
 }
