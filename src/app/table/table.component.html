@@ -23,7 +23,7 @@
           <ng-template #defaultIcon> > </ng-template>
           <ng-container
             *ngIf="expandable"
-            [ngTemplateOutlet]="expandableIcon?.templateRef || defaultIcon"
+            [ngTemplateOutlet]="expandable.icon?.templateRef || defaultIcon"
             [ngTemplateOutletContext]="{
               $implicit: element,
               index: i,
@@ -41,9 +41,9 @@
             />
           </label>
         </td>
-        <td *ngFor="let content of contents">
+        <td *ngFor="let column of columns">
           <ng-container
-            [ngTemplateOutlet]="content.templateRef"
+            [ngTemplateOutlet]="column.template"
             [ngTemplateOutletContext]="{
               $implicit: element,
               index: i,
@@ -52,10 +52,10 @@
           </ng-container>
         </td>
       </tr>
-      <tr *ngIf="expandable && expandableContent && expandedRow === i">
-        <td [attr.colspan]="contents.length + 2">
+      <tr *ngIf="expandable && expandedRow === i">
+        <td [attr.colspan]="columns.length + 2">
           <ng-container
-            [ngTemplateOutlet]="expandableContent.templateRef"
+            [ngTemplateOutlet]="expandable.template"
             [ngTemplateOutletContext]="{
                 $implicit: element,
                 index: i,

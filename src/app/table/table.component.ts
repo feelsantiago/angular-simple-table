@@ -10,12 +10,17 @@ import {
 } from '@angular/core';
 import { TableCheckboxColumnDirective } from './directives/table-checkbox-column.directive';
 import { TableColumnDirective } from './directives/table-column.directive';
-import { TableElementDirective } from './directives/table-element.directive';
 import { TableExpandableContentDirective } from './directives/table-expandable-content.directive';
 import { TableExpandableIconDirective } from './directives/table-expandable-icon.directive';
 import { TableExpandableRowDirective } from './directives/table-expandable-row.directive';
 
 export type TableElementKey<T> = T[keyof T] | number;
+
+type TableElement<T> = {
+  key: TableElementKey<T>;
+  data: T;
+  selected: boolean;
+};
 
 @Component({
   selector: 'app-table',
@@ -38,15 +43,8 @@ export class TableComponent<T extends Object> {
   @Output()
   public selectedKeysChange = new EventEmitter<TableElementKey<T>[]>();
 
-  @ContentChildren(TableElementDirective, {
-    descendants: true,
-  })
-  public contents!: QueryList<TableElementDirective>;
-
-  @ContentChildren(TableColumnDirective, {
-    descendants: true,
-  })
-  public columns!: QueryList<TableColumnDirective>;
+  @ContentChildren(TableColumnDirective)
+  public _columns!: QueryList<TableColumnDirective>;
 
   @ContentChild(TableCheckboxColumnDirective)
   public checkbox?: TableCheckboxColumnDirective;
@@ -54,11 +52,9 @@ export class TableComponent<T extends Object> {
   @ContentChild(TableExpandableRowDirective)
   public expandable?: TableExpandableRowDirective;
 
-  @ContentChild(TableExpandableContentDirective, { descendants: true })
-  public expandableContent?: TableExpandableContentDirective;
-
-  @ContentChild(TableExpandableIconDirective, { descendants: true })
-  public expandableIcon?: TableExpandableIconDirective;
+  public get columns() {
+    return this.expandable?.columns ?? this._columns;
+  }
 
   public selecteds: Map<TableElementKey<T>, boolean> = new Map();
   public expandedRow?: number;
