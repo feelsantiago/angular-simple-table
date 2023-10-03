@@ -5,7 +5,8 @@ export type SelectionState<T> = TableElementKey<T>[] | 'all' | 'none';
 export class TableSelectionState<T> {
   constructor(private readonly selection: SelectionState<T>) {}
 
-  static merge<T>(
+  // Symetric Diffenrece
+  static difference<T>(
     current: TableElementKey<T>[],
     selecteds: SelectionState<T>
   ): TableSelectionState<T> {
@@ -30,13 +31,5 @@ export class TableSelectionState<T> {
     }
 
     return this.selection.includes(key);
-  }
-
-  public selecteds(): TableElementKey<T>[] {
-    if (this.selection === 'all' || this.selection === 'none') {
-      return [];
-    }
-
-    return this.selection;
   }
 }

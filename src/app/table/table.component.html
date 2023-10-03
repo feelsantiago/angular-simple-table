@@ -23,8 +23,7 @@
           <th (click)="onExpandRow(i)">
             <ng-template #defaultIcon> > </ng-template>
             <ng-container
-              *ngIf="expandable"
-              [ngTemplateOutlet]="expandable.icon?.templateRef || defaultIcon"
+              [ngTemplateOutlet]="expandable!.icon?.templateRef || defaultIcon"
               [ngTemplateOutletContext]="{
                 $implicit: element.data,
                 index: i,

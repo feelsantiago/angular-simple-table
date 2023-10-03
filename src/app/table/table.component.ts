@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ContentChild,
@@ -18,7 +17,6 @@ import {
   scan,
   tap,
   withLatestFrom,
-  publishReplay,
   shareReplay,
 } from 'rxjs';
 import { TableCheckboxColumnDirective } from './directives/table-checkbox-column.directive';
@@ -88,7 +86,9 @@ export class TableComponent<T extends Object> {
   constructor() {
     const selecteds$ = this.selectedCommand.pipe(
       withLatestFrom(this.selectedsInput$),
-      map(([selecteds, inputs]) => TableSelectionState.merge(inputs, selecteds))
+      map(([selecteds, inputs]) =>
+        TableSelectionState.difference(inputs, selecteds)
+      )
     );
 
     this.elements$ = combineLatest([
