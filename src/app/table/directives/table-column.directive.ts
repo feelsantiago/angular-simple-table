@@ -12,6 +12,6 @@ export class TableColumnDirective {
   public content!: TableElementDirective;
 
   public get template() {
-    return this.content.templateRef;
+    return this.content.template;
   }
 }

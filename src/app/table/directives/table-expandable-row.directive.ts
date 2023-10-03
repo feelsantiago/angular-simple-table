@@ -23,6 +23,6 @@ export class TableExpandableRowDirective {
   public icon?: TableExpandableIconDirective;
 
   public get template() {
-    return this.content.templateRef;
+    return this.content.template;
   }
 }

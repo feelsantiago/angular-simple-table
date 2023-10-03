@@ -4,5 +4,5 @@ import { Directive, TemplateRef } from '@angular/core';
   selector: '[appTableExpandableIcon]',
 })
 export class TableExpandableIconDirective {
-  constructor(public templateRef: TemplateRef<unknown>) {}
+  constructor(public template: TemplateRef<unknown>) {}
 }

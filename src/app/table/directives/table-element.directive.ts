@@ -4,5 +4,5 @@ import { Directive, TemplateRef } from '@angular/core';
   selector: '[appTableElement]',
 })
 export class TableElementDirective {
-  constructor(public templateRef: TemplateRef<unknown>) {}
+  constructor(public template: TemplateRef<unknown>) {}
 }

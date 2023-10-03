@@ -4,5 +4,5 @@ import { Directive, TemplateRef } from '@angular/core';
   selector: '[appTableExpandableContent]',
 })
 export class TableExpandableContentDirective {
-  constructor(public templateRef: TemplateRef<unknown>) {}
+  constructor(public template: TemplateRef<unknown>) {}
 }
