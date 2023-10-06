@@ -16,15 +16,26 @@
       </ng-template>
     </app-table-column>
 
-    <ng-template appTableExpandableIcon let-option let-expanded="expanded">
-      <ng-container *ngIf="option.suppliers">
-        <span *ngIf="option.suppliers.length > 0 && !expanded"> > </span>
-        <span *ngIf="option.suppliers.length > 0 && expanded"> < </span>
-      </ng-container>
-    </ng-template>
+    <app-table-column title="Actions">
+      <ng-template appTableElement let-option let-row="index">
+        <ng-container *ngIf="option.group">
+          <button type="button" (click)="onExpanded(row, option)">
+            <ng-container
+              *ngIf="expandable?.expanded$ | async as state; else init"
+            >
+              <span *ngIf="!state.expanded(row)">Expand</span>
+              <span *ngIf="state.expanded(row)">Close</span>
+            </ng-container>
+            <ng-template #init>
+              <span>Expand</span>
+            </ng-template>
+          </button>
+        </ng-container>
+      </ng-template>
+    </app-table-column>
 
     <ng-template appTableExpandableContent let-option>
-      <app-test *ngIf="option.suppliers" [data]="option.suppliers"></app-test>
+      <app-test [data]="option.suppliers"></app-test>
     </ng-template>
   </app-table-expandable-row>
 </app-table>

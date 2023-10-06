@@ -1,7 +1,7 @@
 export type TableElementKey<T> = T[keyof T] | number;
 
 export type TableElement<T> = {
-  key: T[keyof T] | number;
+  key: TableElementKey<T>;
   data: T;
   selected: boolean;
 };

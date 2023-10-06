@@ -1,7 +1,6 @@
 <table class="table">
   <thead>
     <tr>
-      <th *ngIf="expandable"></th>
       <th *ngIf="checkbox">
         <label *ngIf="checkbox.showSelectAll" class="checkbox">
           <input type="checkbox" (change)="onSelectAll($event)" />
@@ -19,20 +18,6 @@
           'is-selected': element.selected,
         }"
       >
-        <ng-container *ngIf="expanded$ | async as expanded">
-          <th (click)="onExpandRow(i)">
-            <ng-template #defaultIcon> > </ng-template>
-            <ng-container
-              [ngTemplateOutlet]="expandable!.icon?.template || defaultIcon"
-              [ngTemplateOutletContext]="{
-                $implicit: element.data,
-                index: i,
-                expanded: expanded.expanded(i)
-              }"
-            >
-            </ng-container>
-          </th>
-        </ng-container>
         <td *ngIf="checkbox">
           <label class="checkbox">
             <input
@@ -53,7 +38,7 @@
           </ng-container>
         </td>
       </tr>
-      <ng-container *ngIf="expanded$ | async as row">
+      <ng-container *ngIf="expandable && expandable.expanded$ | async as row">
         <tr *ngIf="row.expanded(i)">
           <td class="expandable-content" [attr.colspan]="columns.length + 2">
             <ng-container

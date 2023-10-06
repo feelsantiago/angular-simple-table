@@ -5,8 +5,8 @@ import { AppComponent } from './app.component';
 import { TableCheckboxColumnDirective } from './table/directives/table-checkbox-column.directive';
 import { TableColumnDirective } from './table/directives/table-column.directive';
 import { TableElementDirective } from './table/directives/table-element.directive';
+import { TableExpandableColumnDirective } from './table/directives/table-expandable-column.directive';
 import { TableExpandableContentDirective } from './table/directives/table-expandable-content.directive';
-import { TableExpandableIconDirective } from './table/directives/table-expandable-icon.directive';
 import { TableExpandableRowDirective } from './table/directives/table-expandable-row.directive';
 import { TableComponent } from './table/table.component';
 import { TestComponent } from './test/test.component';
@@ -20,7 +20,7 @@ import { TestComponent } from './test/test.component';
     TableCheckboxColumnDirective,
     TableElementDirective,
     TableExpandableContentDirective,
-    TableExpandableIconDirective,
+    TableExpandableColumnDirective,
     TestComponent,
   ],
   imports: [BrowserModule],

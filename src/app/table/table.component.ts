@@ -14,16 +14,13 @@ import {
   map,
   filter,
   Observable,
-  scan,
   tap,
   withLatestFrom,
-  shareReplay,
 } from 'rxjs';
 import { TableCheckboxColumnDirective } from './directives/table-checkbox-column.directive';
 import { TableColumnDirective } from './directives/table-column.directive';
 import { TableExpandableRowDirective } from './directives/table-expandable-row.directive';
 import { DataTransform } from './domain/data-transform';
-import { ExpandableRow, ExpandableState } from './domain/expandable-state';
 import {
   SelectionState,
   TableSelectionState,
@@ -69,7 +66,6 @@ export class TableComponent<T extends Object> {
   }
 
   public elements$!: Observable<TableElement<T>[]>;
-  public expanded$!: Observable<ExpandableState>;
 
   private readonly dataInput$ = new BehaviorSubject<T[]>([]);
   private readonly selectByInput$ = new BehaviorSubject<keyof T | undefined>(
@@ -77,9 +73,6 @@ export class TableComponent<T extends Object> {
   );
   private readonly selectedsInput$ = new BehaviorSubject<TableElementKey<T>[]>(
     []
-  );
-  private readonly expandedCommand$ = new BehaviorSubject<ExpandableRow>(
-    'none'
   );
   private readonly selectedCommand = new BehaviorSubject<SelectionState<T>>([]);
 
@@ -102,16 +95,6 @@ export class TableComponent<T extends Object> {
       ),
       tap((elements) => this.selectionChange(elements))
     );
-
-    this.expanded$ = this.expandedCommand$.pipe(
-      scan((state, row) => state.expand(row), ExpandableState.init()),
-      shareReplay(1),
-      filter(() => !!this.expandable)
-    );
-  }
-
-  public onExpandRow(row: number): void {
-    this.expandedCommand$.next(row);
   }
 
   public onElementSelected(element: TableElement<T>): void {

@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ViewChild,
 } from '@angular/core';
+import { TableExpandableRowDirective } from './table/directives/table-expandable-row.directive';
 import { TableElementKey } from './table/domain/types';
 
 type SingleSupplier = {
@@ -70,6 +72,17 @@ export class AppComponent {
       group: false,
       value: 10,
     },
+    {
+      name: 'Supplier 9',
+      group: true,
+      suppliers: [
+        {
+          name: 'Supplier 10',
+          group: false,
+          value: 10,
+        },
+      ],
+    },
   ];
 
   public key: keyof Supplier = 'name';
@@ -83,7 +96,8 @@ export class AppComponent {
     return this._selecteds;
   }
 
-  constructor(private ref: ChangeDetectorRef) {}
+  @ViewChild(TableExpandableRowDirective)
+  public expandable!: TableExpandableRowDirective;
 
   public value(supplier: Supplier): number {
     if (supplier.group) {
@@ -91,5 +105,9 @@ export class AppComponent {
     }
 
     return supplier.value;
+  }
+
+  public onExpanded(row: number, supplier: Supplier): void {
+    this.expandable.expand(row);
   }
 }
