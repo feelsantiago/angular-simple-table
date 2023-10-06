@@ -19,7 +19,7 @@
     <app-table-column title="Actions">
       <ng-template appTableElement let-option let-row="index">
         <ng-container *ngIf="option.group">
-          <button type="button" (click)="onExpanded(row, option)">
+          <button type="button" (click)="onExpanded(row)">
             <ng-container
               *ngIf="expandable?.expanded$ | async as state; else init"
             >

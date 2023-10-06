@@ -29,6 +29,9 @@ type Suppliers = Supplier[];
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+  @ViewChild(TableExpandableRowDirective)
+  public expandable!: TableExpandableRowDirective;
+
   public data: Suppliers = [
     {
       name: 'Supplier 1',
@@ -96,8 +99,9 @@ export class AppComponent {
     return this._selecteds;
   }
 
-  @ViewChild(TableExpandableRowDirective)
-  public expandable!: TableExpandableRowDirective;
+  public onExpanded(row: number): void {
+    this.expandable.expand(row);
+  }
 
   public value(supplier: Supplier): number {
     if (supplier.group) {
@@ -105,9 +109,5 @@ export class AppComponent {
     }
 
     return supplier.value;
-  }
-
-  public onExpanded(row: number, supplier: Supplier): void {
-    this.expandable.expand(row);
   }
 }
